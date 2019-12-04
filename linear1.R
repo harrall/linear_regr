@@ -169,4 +169,47 @@ galton_heights %>%
   geom_point(alpha = 0.5) +
   geom_abline(intercept = b, slope = m)
 
+# bivariate code
+Code
+
+galton_heights %>%
+  mutate(z_father = round((father - mean(father)) / sd(father))) %>%
+  filter(z_father %in% -2:2) %>%
+  ggplot() +  
+  stat_qq(aes(sample = son)) +
+  facet_wrap( ~ z_father)
+
+# two 2 regression lines
+
+# compute a regression line to predict the son's height from the father's height
+mu_x <- mean(galton_heights$father)
+mu_y <- mean(galton_heights$son)
+s_x <- sd(galton_heights$father)
+s_y <- sd(galton_heights$son)
+r <- cor(galton_heights$father, galton_heights$son)
+m_1 <-  r * s_y / s_x
+b_1 <- mu_y - m_1*mu_x
+
+# compute a regression line to predict the father's height from the son's height
+m_2 <-  r * s_x / s_y
+b_2 <- mu_x - m_2*mu_y
+
+# Suppose the correlation between father and son’s height is 0.5, 
+# the standard deviation of fathers’ heights is 2 inches, 
+# and the standard deviation of sons’ heights is 3 inches.
+# Given a one inch increase in a father’s height, 
+# what is the predicted change in the son’s height?
+r <- 0.5
+s_papa <- 2
+s_son <- 3
+pred_change <- r * s_son / s_papa
+pred_change
+
+
+
+
+
+
+
+
 
